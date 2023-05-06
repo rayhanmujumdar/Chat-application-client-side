@@ -4,7 +4,6 @@ import ChatItem from "./chatItem";
 
 export default function ChatList() {
   const [open, control] = useState(false);
-  console.log(open);
   return (
     <div className="w-[100px] border-r border-t-0 border-gray-300 lg:col-span-1 md:w-full">
       <div className="h-[65px] cursor-pointer text-center text-grey-500 p-4 border-b border-gray-300 flex md:justify-end justify-center">
