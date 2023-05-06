@@ -10,7 +10,6 @@ export default function LoginForm() {
 
   const navigate = useNavigate();
   const [login, { data, isLoading, error: responseError }] = useLoginMutation();
-  console.log(data)
   useEffect(() => {
     if (data?.accessToken && data?.user) {
       navigate("/inbox");
@@ -21,7 +20,6 @@ export default function LoginForm() {
   }, [data, responseError]);
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(email,password)
     login({
       email,
       password,

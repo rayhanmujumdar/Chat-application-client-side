@@ -3,19 +3,51 @@ import Login from "./pages/Login";
 import Register from "./pages/register";
 import Chat from "./pages/chat";
 import NotFound from "./component/notFound";
-import Conversation from "./pages/conversation"
+import Conversation from "./pages/conversation";
+import useAuthChecked from "./hooks/useAuthChecked";
+import PrivateRoute from "./component/privateRoute";
+import PublicRoute from "./component/publicRoute";
 
 function App() {
-  return (
-    <div>
-      <Routes>
-        <Route path="/" element={<Login></Login>}></Route>
-        <Route path="/register" element={<Register></Register>}></Route>
-        <Route path="/inbox" element={<Conversation></Conversation>}></Route>
-        <Route path="/inbox/:id" element={<Chat></Chat>}></Route>
-        <Route path="*" element={<NotFound></NotFound>}></Route>
-      </Routes>
-    </div>
+  const authCheck = useAuthChecked();
+  return !authCheck ? (
+    "Authentication Checking....."
+  ) : (
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
+        }
+      ></Route>
+      <Route
+        path="/register"
+        element={
+          <PublicRoute>
+            <Register />
+          </PublicRoute>
+        }
+      ></Route>
+      <Route
+        path="/inbox"
+        element={
+          <PrivateRoute>
+            <Conversation />
+          </PrivateRoute>
+        }
+      ></Route>
+      <Route
+        path="/inbox/:id"
+        element={
+          <PrivateRoute>
+            <Chat></Chat>
+          </PrivateRoute>
+        }
+      ></Route>
+      <Route path="*" element={<NotFound></NotFound>}></Route>
+    </Routes>
   );
 }
 
