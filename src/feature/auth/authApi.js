@@ -13,17 +13,21 @@ export const authApi = apiSlice.injectEndpoints({
       async onQueryStarted(args, { queryFulfilled, dispatch }) {
         try {
           const { data } = await queryFulfilled;
+          const {
+            accessToken,
+            user: { password, ...user },
+          } = data;
           localStorage.setItem(
             "auth",
             JSON.stringify({
-              accessToken: data.accessToken,
-              user: data.user,
+              accessToken: accessToken,
+              user: user,
             })
           );
           dispatch(
             userLoggedIn({
-              accessToken: data.accessToken,
-              user: data.user,
+              accessToken: accessToken,
+              user,
             })
           );
         } catch (err) {
@@ -37,27 +41,32 @@ export const authApi = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      async onQueryStarted(args, { queryFulfilled, dispatch }) {
+        try {
+          const { data } = await queryFulfilled;
+          const {
+            accessToken,
+            user: { password, ...user },
+          } = data;
+          accessToken;
+          localStorage.setItem(
+            "auth",
+            JSON.stringify({
+              accessToken: accessToken,
+              user: user,
+            })
+          );
+          dispatch(
+            userLoggedIn({
+              accessToken: accessToken,
+              user,
+            })
+          );
+        } catch (err) {
+          // do nothing
+        }
+      },
     }),
-    async onQueryStarted(args, { queryFulfilled, dispatch }) {
-      try {
-        const { data } = await queryFulfilled;
-        localStorage.setItem(
-          "auth",
-          JSON.stringify({
-            accessToken: data.accessToken,
-            user: data.user,
-          })
-        );
-        dispatch(
-          userLoggedIn({
-            accessToken: data.accessToken,
-            user: data.user,
-          })
-        );
-      } catch (err) {
-        // do nothing
-      }
-    },
   }),
 });
 

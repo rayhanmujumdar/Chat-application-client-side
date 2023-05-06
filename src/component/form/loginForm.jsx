@@ -1,8 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../../feature/auth/authApi";
+import Error from "../ui/error";
 
 export default function LoginForm() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+  const [login, { data, isLoading, error: responseError }] = useLoginMutation();
+  console.log(data)
+  useEffect(() => {
+    if (data?.accessToken && data?.user) {
+      navigate("/inbox");
+    }
+    if (responseError?.data) {
+      setError(responseError.data.message);
+    }
+  }, [data, responseError]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(email,password)
+    login({
+      email,
+      password,
+    });
+  };
   return (
-    <form className="mt-8 space-y-6" action="#" method="POST">
+    <form
+      onSubmit={handleSubmit}
+      className="mt-8 space-y-6"
+      action="#"
+      method="POST"
+    >
       <input type="hidden" name="remember" value="true" />
       <div className="rounded-md shadow-sm -space-y-px">
         <div>
@@ -10,6 +41,8 @@ export default function LoginForm() {
             Email address
           </label>
           <input
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
             id="email-address"
             name="email"
             type="email"
@@ -24,6 +57,8 @@ export default function LoginForm() {
             Password
           </label>
           <input
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
             id="password"
             name="password"
             type="password"
@@ -34,10 +69,12 @@ export default function LoginForm() {
           />
         </div>
       </div>
-
       <div className="flex items-center justify-end">
         <div className="text-sm">
-          <a href="#" className="font-medium text-violet-600 hover:text-violet-500">
+          <a
+            href="#"
+            className="font-medium text-violet-600 hover:text-violet-500"
+          >
             Forgot your password?
           </a>
         </div>
@@ -45,12 +82,14 @@ export default function LoginForm() {
 
       <div>
         <button
+          disabled={isLoading}
           type="submit"
           className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500"
         >
           Sign in
         </button>
       </div>
+      {error && <Error message={error}></Error>}
     </form>
   );
 }
