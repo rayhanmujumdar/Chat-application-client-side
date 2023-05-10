@@ -1,26 +1,36 @@
 import React from "react";
 import Messages from "./messages";
 import MessageInputFrom from "../form/messageInputFrom";
+import { useParams } from "react-router-dom";
+import { useGetMessageQuery } from "../../feature/messages/messageApi";
+import Loading from "../ui/loading";
+import Error from "../ui/error";
+import ChatHead from "./chatHead";
 
 export default function Inbox() {
+  const { id } = useParams();
+  const { data: messages, isLoading, isError } = useGetMessageQuery(id);
+
+  //decide what to render
+  let content = null;
+  if (isLoading) {
+    content = <Loading></Loading>;
+  } else if (!isLoading && isError) {
+    content = <Error message="There was an error"> </Error>;
+  } else if (!isLoading && !isError && messages?.data?.length === 0) {
+    content = <Error message="Messages not found"></Error>;
+  } else if (!isLoading && !isError && messages?.data?.length > 0) {
+    content = (
+      <>
+        <ChatHead message={messages.data[0]} />
+        <Messages messages={messages.data} />
+        <MessageInputFrom />
+      </>
+    );
+  }
   return (
     <div className="w-full lg:col-span-2 lg:block">
-      <div className="w-full grid conversation-row-grid">
-        <div className="relative flex items-center p-3 border-b border-gray-300">
-          <img
-            className="object-cover w-10 h-10 rounded-full"
-            src="https://cdn.pixabay.com/photo/2018/01/15/07/51/woman-3083383__340.jpg"
-            alt="username"
-          />
-          <span className="block ml-2 font-bold text-gray-600">Emma</span>
-          <span className="absolute w-3 h-3 bg-green-600 rounded-full left-10 top-3"></span>
-        </div>
-        <div className="relative w-full p-6 overflow-y-auto">
-          <Messages></Messages>
-        </div>
-
-        <MessageInputFrom></MessageInputFrom>
-      </div>
+      <div className="w-full grid conversation-row-grid">{content}</div>
     </div>
   );
 }

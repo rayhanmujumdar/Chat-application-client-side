@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Modal from "./modal";
-import ChatItem from "./chatItem";
+import ChatItems from "./chatItems";
 
 export default function ChatList() {
   const [open, control] = useState(false);
@@ -28,11 +28,7 @@ export default function ChatList() {
         </svg>
       </div>
       <Modal open={open} control={control}></Modal>
-      <ul className="overflow-auto">
-        <ChatItem></ChatItem>
-        <ChatItem></ChatItem>
-        <ChatItem></ChatItem>
-      </ul>
+      <ChatItems></ChatItems>
     </div>
   );
 }
