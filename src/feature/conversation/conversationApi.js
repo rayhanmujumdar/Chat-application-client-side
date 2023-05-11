@@ -2,14 +2,28 @@ import { apiSlice } from "../api/apiSlice";
 
 export const conversationApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getConversation: builder.query({
+    getConversations: builder.query({
       query: (email) =>
-        `/conversation?participants=${email}&sort=timestamp&order=desc&page=1&limit=${
+        `/conversations?participants=${email}&sort=timestamp&order=desc&page=1&limit=${
           import.meta.env.VITE_CONVERSATION_PER_PAGE
         }`,
     }),
-    // addConversation: 
+    getConversation: builder.query({
+      query: ({ myEmail, participantEmail }) =>
+        `/conversations?participants=${myEmail}-${participantEmail}&participants=${participantEmail}-${myEmail}`,
+    }),
+    addConversation: builder.mutation({
+      query: (data) => ({
+        url: "/conversations",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useGetConversationQuery } = conversationApi;
+export const {
+  useGetConversationsQuery,
+  useGetConversationQuery,
+  useAddConversationMutation,
+} = conversationApi;
