@@ -5,9 +5,10 @@ import { useDispatch } from "react-redux";
 import { userLoggedOut } from "../feature/auth/authSlice";
 
 export default function Navbar() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const handleLoggedOut = () => {
-    dispatch(userLoggedOut())
+    localStorage.clear();
+    dispatch(userLoggedOut());
   };
   return (
     <nav className="border-general sticky top-0 z-40 border-b bg-violet-700 transition-colors">

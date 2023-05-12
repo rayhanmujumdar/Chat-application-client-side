@@ -19,6 +19,13 @@ export const conversationApi = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    editConversation: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/conversations/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -26,4 +33,5 @@ export const {
   useGetConversationsQuery,
   useGetConversationQuery,
   useAddConversationMutation,
+  useEditConversationMutation,
 } = conversationApi;

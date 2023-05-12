@@ -1,6 +1,6 @@
 import { apiSlice } from "../api/apiSlice";
 
-const usersApi = apiSlice.injectEndpoints({
+export const usersApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getUsers: builder.query({
       query: (email) => `/users?email=${email}`,

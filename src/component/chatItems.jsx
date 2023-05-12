@@ -10,7 +10,7 @@ export default function ChatItems() {
   const {
     data: conversations,
     isLoading,
-    isError
+    isError,
   } = useGetConversationsQuery(user.email);
   // decide what to renders
   let content = null;
