@@ -89,6 +89,7 @@ export default function ModalForm({ control }) {
         const conversationId = conversation[0]._id;
         editConversation({
           id: conversationId,
+          sender: user?.email,
           data: {
             participants: `${user?.email}-${to}`,
             users: [user, participants],
