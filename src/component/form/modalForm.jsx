@@ -99,10 +99,13 @@ export default function ModalForm({ control }) {
       } else if (conversation?.length === 0) {
         // edit conversation
         addConversation({
-          participants: `${user?.email}-${to}`,
-          users: [user, participants],
-          message,
-          timestamp: Date.now(),
+          sender: user?.email,
+          data: {
+            participants: `${user?.email}-${to}`,
+            users: [user, participants],
+            message,
+            timestamp: Date.now(),
+          },
         });
       }
     }
