@@ -2,14 +2,14 @@ import React from "react";
 import Messages from "./messages";
 import MessageInputFrom from "../form/messageInputFrom";
 import { useParams } from "react-router-dom";
-import { useGetMessageQuery } from "../../feature/messages/messageApi";
+import { useGetMessagesQuery } from "../../feature/messages/messageApi";
 import Loading from "../ui/loading";
 import Error from "../ui/error";
 import ChatHead from "./chatHead";
 
 export default function Inbox() {
   const { id } = useParams();
-  const { data: messages, isLoading, isError } = useGetMessageQuery(id);
+  const { data: messages, isLoading, isError } = useGetMessagesQuery(id);
 
   //decide what to render
   let content = null;
@@ -24,7 +24,7 @@ export default function Inbox() {
       <>
         <ChatHead message={messages.data[0]} />
         <Messages messages={messages.data} />
-        <MessageInputFrom />
+        <MessageInputFrom info={messages.data[0]}/>
       </>
     );
   }

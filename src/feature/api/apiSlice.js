@@ -12,6 +12,7 @@ const baseQuery = fetchBaseQuery({
     return headers;
   },
 });
+
 // customize baseQuery implementing
 const customBaseQuery = async (args, api, extraOptions) => {
   const result = await baseQuery(args, api, extraOptions);

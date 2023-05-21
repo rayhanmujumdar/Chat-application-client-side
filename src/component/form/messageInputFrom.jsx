@@ -1,8 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useEditConversationMutation } from "../../feature/conversation/conversationApi";
 
-export default function MessageInputFrom() {
+export default function MessageInputFrom({ info }) {
+  const [message, setMessage] = useState("");
+  const { user: loggedInUser } = useSelector((state) => state.auth) || {};
+  const [editConversation, { isSuccess }] = useEditConversationMutation();
+  const { conversationId, sender, receiver } = info || {};
+  const receiverInfo =
+    sender?.email === loggedInUser?.email ? receiver : sender;
+  // isSuccess property is success boolean if success is true message input are empty
+  useEffect(() => {
+    setMessage("");
+  }, [isSuccess]);
+  // submitted message form handler
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    editConversation({
+      id: conversationId,
+      sender: loggedInUser?.email,
+      data: {
+        participants: `${loggedInUser?.email}-${receiverInfo?.email}`,
+        users: [loggedInUser, receiverInfo],
+        message,
+        timestamp: new Date().getTime(),
+      },
+    });
+  };
   return (
-    <div className="flex items-center justify-between w-full p-3 border-t border-gray-300">
+    <form
+      onSubmit={handleSubmit}
+      className="flex items-center justify-between w-full p-3 border-t border-gray-300"
+    >
       <button>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -21,7 +50,10 @@ export default function MessageInputFrom() {
       </button>
 
       <input
+        autoComplete="off"
         type="text"
+        onChange={(e) => setMessage(e.target.value)}
+        value={message}
         placeholder="Message"
         className="block w-full py-2 pl-4 mx-3 bg-gray-100 focus:ring focus:ring-violet-500 rounded-full outline-none focus:text-gray-700"
         name="message"
@@ -37,6 +69,6 @@ export default function MessageInputFrom() {
           <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
         </svg>
       </button>
-    </div>
+    </form>
   );
 }
