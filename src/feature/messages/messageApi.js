@@ -15,7 +15,7 @@ export const messageApi = apiSlice.injectEndpoints({
           socket.on("message", (data) => {
             updateCachedData((draft) => {
               if (data.data.conversationId === args) {
-                
+
                 draft.data.push(data.data);
               }
               // console.log(JSON.parse(JSON.stringify(draft)))
@@ -26,7 +26,7 @@ export const messageApi = apiSlice.injectEndpoints({
         socket.close();
       },
     }),
-    // &limit=${import.meta.env.VITE_MESSAGE_PER_PAGE}
+    //TODO: &limit=${import.meta.env.VITE_MESSAGE_PER_PAGE}
     addMessage: builder.mutation({
       query: (data) => ({
         url: "/messages",
