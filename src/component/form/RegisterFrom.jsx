@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import{ useEffect, useState } from "react";
 import { useRegisterMutation } from "../../feature/auth/authApi";
 import { useNavigate } from "react-router-dom";
 import Error from "../ui/Error";

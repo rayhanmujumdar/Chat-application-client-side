@@ -1,4 +1,3 @@
-import React from "react";
 import logo from "../assets/lws-logo-dark.svg";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";

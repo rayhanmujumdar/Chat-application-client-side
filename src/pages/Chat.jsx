@@ -1,8 +1,7 @@
-import React from "react";
-import Navbar from "../component/navbar";
-import ChatList from "../component/chatList";
-import Inbox from "../component/chatbody/inbox";
-import Layout from "../component/layout";
+import Navbar from "../component/Navbar";
+import ChatList from "../component/ChatList";
+import Inbox from "../component/chatbody/Inbox";
+import Layout from "../component/Layout";
 
 function Chat() {
   return (

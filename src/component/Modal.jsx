@@ -1,5 +1,4 @@
-import React from "react";
-import ModalForm from "./form/modalForm";
+import ModalForm from "./form/ModalForm";
 
 export default function Modal({ open, control }) {
   return (

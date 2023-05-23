@@ -1,9 +1,8 @@
-import React from "react";
 import ChatItem from "./ChatItem";
 import { useSelector } from "react-redux";
 import { useGetConversationsQuery } from "../feature/conversation/conversationApi";
-import Loading from "./ui/loading";
-import Error from "./ui/error";
+import Loading from "./ui/Loading";
+import Error from "./ui/Error";
 
 export default function ChatItems() {
   const { user } = useSelector((state) => state.auth) || {};

@@ -1,4 +1,3 @@
-import React from "react";
 import blankImage from "../assets/blank.svg";
 
 export default function Blank() {

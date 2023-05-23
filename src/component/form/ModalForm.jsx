@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import debounce from "../../utils/debounce";
-import { useGetUsersQuery, usersApi } from "../../feature/users/usersApi";
+import { usersApi } from "../../feature/users/usersApi";
 import { useDispatch, useSelector } from "react-redux";
 import Error from "../ui/Error";
 import isValidEmail from "../../utils/isValidEmail";

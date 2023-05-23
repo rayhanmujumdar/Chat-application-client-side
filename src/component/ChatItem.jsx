@@ -1,5 +1,4 @@
 import moment from "moment/moment";
-import React from "react";
 import getPartnerInfo from "../utils/getPartnerInfo";
 import { useSelector } from "react-redux";
 import gravatar from "gravatar";

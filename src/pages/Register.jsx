@@ -1,4 +1,3 @@
-import React from "react";
 import RegisterFrom from "../component/form/RegisterFrom";
 import logo from "../assets/lws-logo-light.svg";
 

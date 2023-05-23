@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Modal from "./Modal";
-import ChatItems from "./chatItems";
+import ChatItems from "./ChatItems";
 
 export default function ChatList() {
   const [open, control] = useState(false);

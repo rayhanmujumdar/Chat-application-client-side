@@ -1,5 +1,3 @@
-import React, { Children } from "react";
-
 export default function Layout({ children }) {
   return (
     <div className="max-w-7xl mx-auto -mt-1">
