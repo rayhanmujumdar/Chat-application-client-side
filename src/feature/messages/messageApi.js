@@ -1,5 +1,6 @@
 import { apiSlice } from "../api/apiSlice";
-import socket from "../../utils/socket";
+import Pusher from "pusher-js";
+// import socket from "../../utils/socket";
 export const messageApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // endpoints here
@@ -12,18 +13,35 @@ export const messageApi = apiSlice.injectEndpoints({
       ) => {
         try {
           await cacheDataLoaded;
-          socket.on("message", (data) => {
+          const pusher = new Pusher(import.meta.env.VITE_PUSHER_KEY, {
+            cluster: import.meta.env.VITE_PUSHER_CLUSTER,
+          });
+          const channel = pusher.subscribe(
+            import.meta.env.VITE_PUSHER_CHANNEL_NAME
+          );
+          channel.bind("message", function (data) {
             updateCachedData((draft) => {
               if (data.data.conversationId === args) {
-
                 draft.data.push(data.data);
               }
-              // console.log(JSON.parse(JSON.stringify(draft)))
             });
           });
-        } catch (err) {}
+          // TODO: socket.io use in this below:
+          // socket.on("message", (data) => {
+          //   console.log(data)
+          //   updateCachedData((draft) => {
+          //     if (data.data.conversationId === args) {
+
+          //       draft.data.push(data.data);
+          //     }
+          //     // console.log(JSON.parse(JSON.stringify(draft)))
+          //   });
+          // });
+        } catch (err) {
+          console.log(err);
+        }
         await cacheEntryRemoved;
-        socket.close();
+        // socket.close();
       },
     }),
     //TODO: &limit=${import.meta.env.VITE_MESSAGE_PER_PAGE}

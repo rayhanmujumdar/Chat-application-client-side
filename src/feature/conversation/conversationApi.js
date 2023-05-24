@@ -1,6 +1,7 @@
 import { apiSlice } from "../api/apiSlice";
 import { messageApi } from "../messages/messageApi";
-import socket from "../../utils/socket";
+// import socket from "../../utils/socket";
+import Pusher from "pusher-js";
 
 export const conversationApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -10,31 +11,69 @@ export const conversationApi = apiSlice.injectEndpoints({
           import.meta.env.VITE_CONVERSATION_PER_PAGE
         }`,
       onCacheEntryAdded: async (
-        args,
+        _args,
         { cacheDataLoaded, updateCachedData, cacheEntryRemoved }
       ) => {
         try {
           await cacheDataLoaded;
-          socket.on("conversation", (data) => {
+          const pusher = new Pusher(import.meta.env.VITE_PUSHER_KEY, {
+            cluster: import.meta.env.VITE_PUSHER_CLUSTER,
+          });
+          var channel = pusher.subscribe(
+            import.meta.env.VITE_PUSHER_CHANNEL_NAME
+          );
+          channel.bind("conversation", function (data) {
+            console.log(data);
             updateCachedData((draft) => {
-              const draftConversation = draft.data.find(
-                (conversation) => conversation._id === data.data._id
-              );
-              // console.log(JSON.parse(JSON.stringify(draftConversation)));
-              if (draftConversation?._id) {
+              const draftConversation =
+                draft.data.find(
+                  (conversation) => conversation._id === data.data._id
+                ) || {};
+              if (draftConversation._id) {
                 draftConversation.message = data.data.message;
                 draftConversation.timestamp = data.data.timestamp;
+              } else {
+                draft.data.push(data.data);
               }
             });
           });
-        } catch (err) {}
+          // TODO: socket.io use in this below:
+          // socket.on("conversation", (data) => {
+          //   updateCachedData((draft) => {
+          //     const draftConversation = draft.data.find(
+          //       (conversation) => conversation._id === data.data._id
+          //     );
+          //     // console.log(JSON.parse(JSON.stringify(draftConversation)));
+          //     if (draftConversation?._id) {
+          //       draftConversation.message = data.data.message;
+          //       draftConversation.timestamp = data.data.timestamp;
+          //     }
+          //   });
+          // });
+        } catch (err) {
+          console.log(err);
+        }
         await cacheEntryRemoved;
-        socket.close();
+        // socket.close();
       },
     }),
     getConversation: builder.query({
       query: ({ myEmail, participantEmail }) =>
         `/conversations?participants=${myEmail}-${participantEmail}&participants=${participantEmail}-${myEmail}`,
+      // onCacheEntryAdded: async (
+      //   args,
+      //   { cacheDataLoaded, updateCachedData, cacheEntryRemoved }
+      // ) => {
+      //   try {
+      //     await cacheDataLoaded;
+      //     updateCachedData((draft) => {
+      //       console.log(JSON.parse(JSON.stringify(draft)));
+      //     });
+      //   } catch (err) {
+      //     console.log(err);
+      //   }
+      //   await cacheEntryRemoved
+      // },
     }),
     addConversation: builder.mutation({
       query: ({ data }) => ({
@@ -90,7 +129,6 @@ export const conversationApi = apiSlice.injectEndpoints({
             // pessimistic cache update end
           }
         } catch (err) {
-          optimisticAddConversation.undo();
           console.log(err);
         }
       },
@@ -111,12 +149,12 @@ export const conversationApi = apiSlice.injectEndpoints({
         { id, sender, data },
         { queryFulfilled, dispatch }
       ) => {
-        // optimistic cache update start
+        // optimistic conversation cache update start
         const optimisticUpdateConversation = dispatch(
           apiSlice.util.updateQueryData("getConversations", sender, (draft) => {
-            const draftConversation = draft?.data?.find(
-              (conversation) => conversation._id === id
-            );
+            const draftConversation =
+              draft?.data?.find((conversation) => conversation._id === id) ||
+              {};
             draftConversation.message = data.message;
             draftConversation.timestamp = data.timestamp;
           })
@@ -143,6 +181,7 @@ export const conversationApi = apiSlice.injectEndpoints({
                 timestamp: data.timestamp,
               })
             );
+            // TODO: i can use in this code if my cache data update in pessimistically
             // pessimistic cache update start
             // dispatch(
             //   apiSlice.util.updateQueryData(
@@ -150,7 +189,7 @@ export const conversationApi = apiSlice.injectEndpoints({
             //     messageResult.conversationId,
             //     (draft) => {
             //       draft.data.push(messageResult);
-                  // console.log(JSON.parse(JSON.stringify(draft)))
+            // console.log(JSON.parse(JSON.stringify(draft)))
             //     }
             //   )
             // );

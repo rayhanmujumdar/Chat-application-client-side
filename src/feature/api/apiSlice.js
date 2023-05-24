@@ -3,7 +3,7 @@ import { userLoggedOut } from "../auth/authSlice";
 
 // create a baseQuery
 const baseQuery = fetchBaseQuery({
-  baseUrl: import.meta.env.VITE_API_URL,
+  baseUrl: `${import.meta.env.VITE_API_URL}/api/v1`,
   prepareHeaders: async (headers, { getState }) => {
     const token = getState()?.auth?.accessToken;
     if (token) {
