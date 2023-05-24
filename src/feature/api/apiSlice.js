@@ -4,7 +4,7 @@ import { userLoggedOut } from "../auth/authSlice";
 // create a baseQuery
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_URL,
-  prepareHeaders: async (headers, { getState, endpoints }) => {
+  prepareHeaders: async (headers, { getState }) => {
     const token = getState()?.auth?.accessToken;
     if (token) {
       headers.set("authorization", `Bearer ${token}`);
@@ -28,5 +28,5 @@ export const apiSlice = createApi({
   keepUnusedDataFor: 600,
   baseQuery: customBaseQuery,
   tagTypes: [],
-  endpoints: (builder) => ({}),
+  endpoints: () => ({}),
 });

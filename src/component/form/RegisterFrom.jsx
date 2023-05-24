@@ -1,6 +1,6 @@
-import{ useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRegisterMutation } from "../../feature/auth/authApi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Error from "../ui/Error";
 
 export default function RegisterFrom() {
@@ -107,8 +107,20 @@ export default function RegisterFrom() {
           />
         </div>
       </div>
-
-      <div className="flex items-center justify-between">
+      <div
+        style={{ marginTop: "10px" }}
+        className="flex items-center justify-end mt-2"
+      >
+        <div className="text-sm">
+          <Link
+            to="/"
+            className="font-medium text-violet-600 hover:text-violet-500"
+          >
+            I have already an account!
+          </Link>
+        </div>
+      </div>
+      <div style={{ marginTop: "10px" }} className="flex items-center justify-between">
         <div className="flex items-center">
           <input
             id="agree"

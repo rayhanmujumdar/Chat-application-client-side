@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../feature/auth/authApi";
 import Error from "../ui/Error";
 
@@ -69,12 +69,12 @@ export default function LoginForm() {
       </div>
       <div className="flex items-center justify-end">
         <div className="text-sm">
-          <a
-            href="#"
+          <Link
+            to="/register"
             className="font-medium text-violet-600 hover:text-violet-500"
           >
-            Forgot your password?
-          </a>
+            create a new account?
+          </Link>
         </div>
       </div>
 
