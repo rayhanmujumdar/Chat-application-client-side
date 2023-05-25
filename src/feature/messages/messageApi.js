@@ -12,13 +12,13 @@ export const messageApi = apiSlice.injectEndpoints({
         { cacheDataLoaded, updateCachedData, cacheEntryRemoved }
       ) => {
         try {
-          await cacheDataLoaded;
           const pusher = new Pusher(import.meta.env.VITE_PUSHER_KEY, {
             cluster: import.meta.env.VITE_PUSHER_CLUSTER,
           });
           const channel = pusher.subscribe(
             import.meta.env.VITE_PUSHER_CHANNEL_NAME
           );
+          await cacheDataLoaded;
           channel.bind("message", function (data) {
             updateCachedData((draft) => {
               if (data.data.conversationId === args) {
@@ -31,7 +31,6 @@ export const messageApi = apiSlice.injectEndpoints({
           //   console.log(data)
           //   updateCachedData((draft) => {
           //     if (data.data.conversationId === args) {
-
           //       draft.data.push(data.data);
           //     }
           //     // console.log(JSON.parse(JSON.stringify(draft)))

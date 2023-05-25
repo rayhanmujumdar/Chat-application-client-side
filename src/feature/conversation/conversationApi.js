@@ -23,13 +23,13 @@ export const conversationApi = apiSlice.injectEndpoints({
             import.meta.env.VITE_PUSHER_CHANNEL_NAME
           );
           channel.bind("conversation", function (data) {
-            console.log(data);
+            console.log(data)
             updateCachedData((draft) => {
               const draftConversation =
                 draft.data.find(
                   (conversation) => conversation._id === data.data._id
                 ) || {};
-              if (draftConversation._id) {
+              if (draftConversation?._id) {
                 draftConversation.message = data.data.message;
                 draftConversation.timestamp = data.data.timestamp;
               } else {
@@ -188,8 +188,8 @@ export const conversationApi = apiSlice.injectEndpoints({
             //     "getMessages",
             //     messageResult.conversationId,
             //     (draft) => {
+            //       console.log(JSON.parse(JSON.stringify(draft)));
             //       draft.data.push(messageResult);
-            // console.log(JSON.parse(JSON.stringify(draft)))
             //     }
             //   )
             // );
