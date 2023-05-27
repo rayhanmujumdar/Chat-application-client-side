@@ -9,7 +9,8 @@ import ChatHead from "./chatHead";
 
 export default function Inbox() {
   const { id } = useParams();
-  const { data: messages, isLoading, isError } = useGetMessagesQuery(id);
+  const { data, isLoading, isError } = useGetMessagesQuery(id) || {};
+  const { data: messages, totalCount } = data || {};
 
   //decide what to render
   let content = null;
@@ -23,8 +24,8 @@ export default function Inbox() {
     content = (
       <>
         <ChatHead message={messages.data[0]} />
-        <Messages messages={messages.data} />
-        <MessageInputFrom info={messages.data[0]}/>
+        <Messages messages={messages.data} totalCount={totalCount}/>
+        <MessageInputFrom info={messages.data[0]} />
       </>
     );
   }

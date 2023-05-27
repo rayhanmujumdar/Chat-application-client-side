@@ -23,7 +23,7 @@ export const conversationApi = apiSlice.injectEndpoints({
             import.meta.env.VITE_PUSHER_CHANNEL_NAME
           );
           channel.bind("conversation", function (data) {
-            console.log(data)
+            console.log(data);
             updateCachedData((draft) => {
               const draftConversation =
                 draft.data.find(
@@ -122,7 +122,8 @@ export const conversationApi = apiSlice.injectEndpoints({
                 "getMessages",
                 messageResult.conversationId,
                 (draft) => {
-                  draft.data.push(messageResult);
+                  const draftMessage = draft.data.data;
+                  draftMessage.unshift(messageResult);
                 }
               )
             );

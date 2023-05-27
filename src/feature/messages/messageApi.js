@@ -6,7 +6,13 @@ export const messageApi = apiSlice.injectEndpoints({
     // endpoints here
     getMessages: builder.query({
       query: (id) =>
-        `/messages?conversationId=${id}&sort=timestamp&order=asc&page=1`,
+        `/messages?conversationId=${id}&sort=timestamp&order=desc&limit=${
+          import.meta.env.VITE_MESSAGE_PER_PAGE
+        }&page=1`,
+      transformResponse: (response, meta) => {
+        const totalCount = meta.response.headers.get("X-Total-Count");
+        return { data: response, totalCount };
+      },
       onCacheEntryAdded: async (
         args,
         { cacheDataLoaded, updateCachedData, cacheEntryRemoved }
@@ -22,7 +28,7 @@ export const messageApi = apiSlice.injectEndpoints({
           channel.bind("message", function (data) {
             updateCachedData((draft) => {
               if (data.data.conversationId === args) {
-                draft.data.push(data.data);
+                draft.data.data.unshift(data.data);
               }
             });
           });
@@ -33,7 +39,7 @@ export const messageApi = apiSlice.injectEndpoints({
           //     if (data.data.conversationId === args) {
           //       draft.data.push(data.data);
           //     }
-          //     // console.log(JSON.parse(JSON.stringify(draft)))
+          // console.log(JSON.parse(JSON.stringify(draft)))
           //   });
           // });
         } catch (err) {
@@ -41,6 +47,31 @@ export const messageApi = apiSlice.injectEndpoints({
         }
         await cacheEntryRemoved;
         // socket.close();
+      },
+    }),
+    getMoreMessages: builder.query({
+      query: ({ id, page }) =>
+        `/messages?conversationId=${id}&sort=timestamp&order=desc&limit=${
+          import.meta.env.VITE_MESSAGE_PER_PAGE
+        }&page=${page}`,
+      onQueryStarted: async ({ id }, { queryFulfilled, dispatch }) => {
+        try {
+          const { data: messages } = await queryFulfilled;
+          if (messages?.data?.length > 0) {
+            dispatch(
+              apiSlice.util.updateQueryData("getMessages", id, (draft) => {
+                return {
+                  data: {
+                    data: [...draft.data.data, ...messages.data],
+                  },
+                  totalCount: Number(draft.totalCount),
+                };
+              })
+            );
+          }
+        } catch (err) {
+          console.log(err);
+        }
       },
     }),
     //TODO: &limit=${import.meta.env.VITE_MESSAGE_PER_PAGE}

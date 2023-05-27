@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useGetConversationsQuery } from "../feature/conversation/conversationApi";
 import Loading from "./ui/Loading";
 import Error from "./ui/Error";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export default function ChatItems() {
   const { user } = useSelector((state) => state.auth) || {};
@@ -20,9 +21,22 @@ export default function ChatItems() {
   } else if (!isLoading && !isError && conversations?.data?.length === 0) {
     content = <Error message="No conversation"></Error>;
   } else if (!isLoading && !isError && conversations?.data?.length > 0) {
-    content = conversations.data.map((conversation) => (
-      <ChatItem key={conversation._id} conversation={conversation}></ChatItem>
-    ));
+    content = (
+      <InfiniteScroll
+        dataLength={conversations?.length || 0}
+        next={() => console.log("fetching")}
+        hasMore={true}
+        loader={<h4>Loading...</h4>}
+        height={window.innerHeight - 129}
+      >
+        {conversations.data.map((conversation) => (
+          <ChatItem
+            key={conversation._id}
+            conversation={conversation}
+          ></ChatItem>
+        ))}
+      </InfiniteScroll>
+    );
   }
   return <ul>{content}</ul>;
 }
