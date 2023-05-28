@@ -8,7 +8,6 @@ export default function ChatItem({ conversation }) {
   const { _id, message, timestamp, users } = conversation;
   const { user } = useSelector((state) => state.auth);
   const { name, email } = getPartnerInfo(users, user.email);
-
   return (
     <li>
       <Link

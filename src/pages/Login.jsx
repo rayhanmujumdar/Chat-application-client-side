@@ -1,5 +1,5 @@
 import LoginForm from "../component/form/LoginForm";
-import logo from "../assets/lws-logo-light.svg";
+import logo from "../assets/dingu_chat_application_logo.png";
 
 function Login() {
   return (
