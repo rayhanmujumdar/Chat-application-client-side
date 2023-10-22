@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { useGetMessagesQuery } from "../../feature/messages/messageApi";
 import Loading from "../ui/Loading";
 import Error from "../ui/Error";
-import ChatHead from "./chatHead";
+import ChatHead from "./ChatHead";
 
 export default function Inbox() {
   const { id } = useParams();
