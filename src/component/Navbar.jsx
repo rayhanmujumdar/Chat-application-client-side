@@ -1,4 +1,4 @@
-import logo from "../assets/dingu logo.png";
+// import logo from "../assets/dingu logo.png";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { userLoggedOut } from "../feature/auth/authSlice";
